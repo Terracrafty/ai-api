@@ -15,8 +15,8 @@ class ChatbotController extends Controller
             $history = ChatHistory::where('session_id', '=', $request->session_id)
             ->where('user_id', '=', $request->user()->id)
             ->orderBy('created_at', 'asc')
-            ->get();
-            $history = $history->map(fn($chat) => [
+            ->get()
+            ->map(fn($chat) => [
                 ['role' => 'user', 'content' => $chat->user_message],
                 ['role' => 'assistant', 'content' => $chat->bot_response],
             ])
@@ -30,7 +30,7 @@ class ChatbotController extends Controller
             $messages = [['role' => 'user', 'content' => $request->message]];
         }
 
-        $reply = Http::post('http://localhost:11434/api/generate', [
+        $reply = Http::post('http://localhost:11434/api/chat', [
             'model' => 'mistral',
             'messages' => $messages,
             'stream' => false
