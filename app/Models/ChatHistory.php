@@ -9,7 +9,8 @@ class ChatHistory extends Model
 {
     protected $fillable = [
         'user_message',
-        'bot_response'
+        'bot_response',
+        'session_id'
     ];
 
     public function user(): BelongsTo {

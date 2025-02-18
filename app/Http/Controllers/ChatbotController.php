@@ -30,11 +30,20 @@ class ChatbotController extends Controller
             $messages = [['role' => 'user', 'content' => $request->message]];
         }
 
-        $reply = Http::post('http://localhost:11434/api/chat', [
+        $ai_reply = Http::timeout(120)->post('http://localhost:11434/api/chat', [
             'model' => 'mistral',
             'messages' => $messages,
             'stream' => false
         ]);
-        return $reply->json();
+
+        $response = $ai_reply->json();
+        $response['session_id'] = $session_id;
+        $request->user()->chathistories()->create([
+            'session_id' => $session_id,
+            'user_message' => $request->message,
+            'bot_response' => $response['message']['content']
+        ]);
+
+        return $response;
     }
 }

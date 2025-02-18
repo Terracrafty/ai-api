@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id')->constrained();
-            $table->integer('session_id');
+            $table->string('session_id');
             $table->text('user_message');
             $table->text('bot_response');
         });
